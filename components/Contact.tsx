@@ -37,7 +37,6 @@ const Contact = () => {
   useEffect(() => {
     const initEmailJS = () => {
       const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-      console.log('Tentative d\'initialisation de EmailJS avec la clé:', publicKey);
       
       if (!publicKey) {
         console.error('EmailJS public key is not defined');

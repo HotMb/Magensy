@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,7 +34,7 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <img src="/img/logo.png" alt="Magensy" className="h-25 w-40" />
+            <img src={`${basePath}/img/logo.png`} alt="Magensy" className="h-25 w-40" />
           </div>
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
