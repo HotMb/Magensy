@@ -1,0 +1,22 @@
+name: Guardian cleanup review
+on:
+  workflow_dispatch:
+    inputs:
+      candidate:
+        description: Reviewed file to test for removal
+        required: true
+        type: string
+      allow_preparation:
+        description: Approve npm ci before verification
+        required: true
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  review:
+    uses: HotMb/guardian-autopilot/.github/workflows/cleanup-experiment.yml@2ce7ba36be432c0a679fe02a68d45eb0bac4df36
+    with:
+      candidate: ${{ inputs.candidate }}
+      checks: guardian-checks.json
+      allow_preparation: ${{ inputs.allow_preparation }}

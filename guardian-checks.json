@@ -1,0 +1,6 @@
+{
+  "prepare": [{"command": "npm", "args": ["ci"], "timeoutMs": 600000}],
+  "build": {"command": "npm", "args": ["run", "build"], "timeoutMs": 600000},
+  "typecheck": {"command": "npm", "args": ["exec", "--", "tsc", "--noEmit"], "timeoutMs": 600000},
+  "test": {"command": "node", "args": ["--test", "tests/guardian-smoke.test.mjs"], "timeoutMs": 120000}
+}
