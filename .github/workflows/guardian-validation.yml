@@ -1,7 +1,6 @@
 name: Magensy verification
 on:
   push:
-    branches: [main, hotmb/guardian-review-7c42af]
   pull_request:
     branches: [main]
 permissions:
@@ -21,49 +20,3 @@ jobs:
       - run: npm run build
       - run: npm exec -- tsc --noEmit
       - run: node --test tests/guardian-smoke.test.mjs
-
-  candidate-test:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/hotmb/guardian-review-7c42af' }}
-    needs: verify
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout Magensy
-        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
-        with:
-          path: target
-          ref: ${{ github.sha }}
-          persist-credentials: false
-      - name: Checkout Guardian
-        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
-        with:
-          repository: HotMb/guardian-autopilot
-          ref: 2ce7ba36be432c0a679fe02a68d45eb0bac4df36
-          path: guardian-tool
-          persist-credentials: false
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
-        with:
-          node-version: 22
-      - name: Build Guardian
-        working-directory: guardian-tool
-        run: |
-          npm ci --ignore-scripts
-          npm run build:cli
-      - name: Test the reviewed candidate
-        run: |
-          git -C "$GITHUB_WORKSPACE/target" config user.name "$GITHUB_ACTOR"
-          git -C "$GITHUB_WORKSPACE/target" config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          mkdir -p "$RUNNER_TEMP/guardian-review"
-          node "$GITHUB_WORKSPACE/guardian-tool/scripts/github-cleanup-experiment.mjs" \
-            --target "$GITHUB_WORKSPACE/target" \
-            --candidate 'components/ui/badge.tsx' \
-            --checks guardian-checks.json \
-            --head "$GITHUB_SHA" \
-            --output "$RUNNER_TEMP/guardian-review" \
-            --allow-preparation
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: guardian-magensy-badge-test
-          path: ${{ runner.temp }}/guardian-review/
-          if-no-files-found: error
-          retention-days: 7
